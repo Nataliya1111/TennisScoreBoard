@@ -11,12 +11,12 @@
     <title>Tennis Scoreboard | New Match</title>
 </head>
 <body>
-    <form action="/new-match" method="post">
+    <form action="#" method="post">
         <label for="player1Name">Player one:<br>
             <input type="text" name="player1Name" id="player1Name">
         </label><br>
         <label for="player2Name">Player two:<br>
-            <input type="text" name="player1Name" id="player2Name">
+            <input type="text" name="player2Name" id="player2Name">
         </label><br>
         <input type="submit" value="Start">
 

@@ -10,6 +10,7 @@ import lombok.*;
 @Getter
 @Setter
 @ToString
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Player {
 
     @Id
@@ -17,6 +18,7 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @EqualsAndHashCode.Include
     @Column(name = "Name", unique = true, nullable = false)
     private String name;
 

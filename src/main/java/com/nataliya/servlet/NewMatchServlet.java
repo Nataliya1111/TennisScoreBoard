@@ -1,6 +1,9 @@
 package com.nataliya.servlet;
 
+import com.nataliya.dto.NewMatchDto;
+import com.nataliya.exception.InvalidRequestException;
 import com.nataliya.util.JspUtil;
+import com.nataliya.util.ValidationUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -24,7 +27,9 @@ public class NewMatchServlet extends HttpServlet {
         String player1Name = req.getParameter("player1Name");
         String player2Name = req.getParameter("player2Name");
 
+        NewMatchDto newMatchDto = new NewMatchDto(player1Name, player2Name);
 
+        ValidationUtil.validate(newMatchDto);
 
 
     }

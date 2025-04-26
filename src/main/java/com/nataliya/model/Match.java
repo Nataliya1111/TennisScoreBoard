@@ -1,30 +1,31 @@
 package com.nataliya.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Entity
 @Table(name = "Matches")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
-@ToString
+@ToString(onlyExplicitlyIncluded = true)
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 public class Match {
 
     @Id
     @Column(name = "Id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @ToString.Include
     private Long id;
 
     @ManyToOne
     @JoinColumn(name = "player1_id", referencedColumnName = "id")
+    @EqualsAndHashCode.Include
     private Player player1;
 
     @ManyToOne
     @JoinColumn(name = "player2_id", referencedColumnName = "id")
+    @EqualsAndHashCode.Include
     private Player player2;
 
     @ManyToOne
