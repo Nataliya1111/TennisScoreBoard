@@ -2,9 +2,11 @@ package com.nataliya.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.Check;
 
 @Entity
 @Table(name = "Matches")
+@Check(constraints = "player1_id<>player2_id")
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
@@ -31,4 +33,6 @@ public class Match {
     @ManyToOne
     @JoinColumn(name = "winner_id", referencedColumnName = "id")
     private Player winner;
+
+
 }

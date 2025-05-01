@@ -22,6 +22,9 @@ public class ValidationUtil {
         if(player1Name.length() > 20 || !player1Name.matches("[a-zA-Z0-9 ]")){
             throw new InvalidRequestException("Invalid player one name. Name: up to 20 characters - Latin letters or numbers");
         }
+        if(player1Name.equals(player2Name)){
+            throw new InvalidRequestException("Player names must be different");
+        }
     }
 
 
