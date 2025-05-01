@@ -1,7 +1,6 @@
 package com.nataliya.dao;
 
 import com.nataliya.model.Player;
-import com.nataliya.util.HibernateUtil;
 import lombok.RequiredArgsConstructor;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
