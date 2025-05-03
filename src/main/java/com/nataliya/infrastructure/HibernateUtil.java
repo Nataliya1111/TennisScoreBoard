@@ -1,7 +1,7 @@
 package com.nataliya.infrastructure;
 
-import com.nataliya.model.Match;
-import com.nataliya.model.Player;
+import com.nataliya.model.entity.Match;
+import com.nataliya.model.entity.Player;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 

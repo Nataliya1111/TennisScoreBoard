@@ -1,7 +1,6 @@
 package com.nataliya.servlet;
 
 import com.nataliya.dto.NewMatchDto;
-import com.nataliya.exception.InvalidRequestException;
 import com.nataliya.util.JspUtil;
 import com.nataliya.util.ValidationUtil;
 import jakarta.servlet.ServletException;
@@ -30,7 +29,6 @@ public class NewMatchServlet extends HttpServlet {
         NewMatchDto newMatchDto = new NewMatchDto(player1Name, player2Name);
 
         ValidationUtil.validate(newMatchDto);
-
 
     }
 }

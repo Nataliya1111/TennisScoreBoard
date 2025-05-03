@@ -1,4 +1,4 @@
-package com.nataliya.model;
+package com.nataliya.model.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
