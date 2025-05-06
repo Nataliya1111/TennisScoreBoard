@@ -11,21 +11,33 @@ public class ValidationUtil {
     public static void validate(NewMatchDto newMatchDto){
 
         String player1Name = newMatchDto.getPlayer1Name();
-        String player2Name = newMatchDto.getPlayer1Name();
+        String player2Name = newMatchDto.getPlayer2Name();
 
-        if (player1Name == null || player1Name.isBlank()){
-            throw new InvalidRequestException("Missing player one name");
+        if (isNameMissed(player1Name)){
+            throw new InvalidRequestException("Missing Player one name");
         }
-        if (player2Name == null || player2Name.isBlank()){
-            throw new InvalidRequestException("Missing player two name");
+        if (isNameMissed(player2Name)){
+            throw new InvalidRequestException("Missing Player two name");
         }
-        if(player1Name.length() > 20 || !player1Name.matches("[a-zA-Z0-9 ]")){
-            throw new InvalidRequestException("Invalid player one name. Name: up to 20 characters - Latin letters or numbers");
+        if(isNameInvalid(player1Name) && isNameInvalid(player2Name)){
+            throw new InvalidRequestException("Invalid players names. Name: up to 20 characters - Latin letters or numbers");
+        }
+        if(isNameInvalid(player1Name)){
+            throw new InvalidRequestException("Invalid Player one name. Name: up to 20 characters - Latin letters or numbers");
+        }
+        if(isNameInvalid(player2Name)){
+            throw new InvalidRequestException("Invalid Player two name. Name: up to 20 characters - Latin letters or numbers");
         }
         if(player1Name.equals(player2Name)){
             throw new InvalidRequestException("Player names must be different");
         }
     }
 
+    private static boolean isNameMissed(String name){
+        return name == null || name.isBlank();
+    }
 
+    private static boolean isNameInvalid(String name){
+        return name.length() > 20 || !name.matches("[a-zA-Z0-9 ]+");
+    }
 }

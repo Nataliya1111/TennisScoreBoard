@@ -22,7 +22,7 @@ public class TestHibernate {
         OngoingMatch ongoingMatch = ongoingMatchService.createOngoingMatch(newMatchDto);
         System.out.println(ongoingMatch);
 
-        NewMatchDto newMatchDto1 = new NewMatchDto("Olga1", "Ivan");
+        NewMatchDto newMatchDto1 = new NewMatchDto("Olga2", "Ivan");
 
         OngoingMatch ongoingMatch1 = ongoingMatchService.createOngoingMatch(newMatchDto1);
         System.out.println(ongoingMatch1);

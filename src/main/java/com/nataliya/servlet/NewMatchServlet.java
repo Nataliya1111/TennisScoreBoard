@@ -1,6 +1,8 @@
 package com.nataliya.servlet;
 
 import com.nataliya.dto.NewMatchDto;
+import com.nataliya.exception.InvalidRequestException;
+import com.nataliya.service.OngoingMatchService;
 import com.nataliya.util.JspUtil;
 import com.nataliya.util.ValidationUtil;
 import jakarta.servlet.ServletException;
@@ -13,11 +15,12 @@ import java.io.IOException;
 
 @WebServlet("/new-match")
 public class NewMatchServlet extends HttpServlet {
-    private static final String JSP_NAME = "new-match";
+    private static final String NEW_MATCH_JSP_NAME = "new-match";
+    private static final String MATCH_SCORE_JSP_NAME = "match-score";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher(JspUtil.getPath(JSP_NAME)).forward(req, resp);
+        req.getRequestDispatcher(JspUtil.getPath(NEW_MATCH_JSP_NAME)).forward(req, resp);
     }
 
     @Override
@@ -25,10 +28,22 @@ public class NewMatchServlet extends HttpServlet {
 
         String player1Name = req.getParameter("player1Name");
         String player2Name = req.getParameter("player2Name");
+        req.setAttribute("player1Name", player1Name);
+        req.setAttribute("player2Name", player2Name);
 
         NewMatchDto newMatchDto = new NewMatchDto(player1Name, player2Name);
 
-        ValidationUtil.validate(newMatchDto);
+        try {
+            ValidationUtil.validate(newMatchDto);
+        } catch (InvalidRequestException e) {
+            req.setAttribute("Error_message", e.getMessage());
+            req.getRequestDispatcher(JspUtil.getPath(NEW_MATCH_JSP_NAME)).forward(req, resp);
+            return;
+        }
 
+        final OngoingMatchService ongoingMatchService = new OngoingMatchService();
+        ongoingMatchService.createOngoingMatch(newMatchDto);
+
+        resp.sendRedirect(MATCH_SCORE_JSP_NAME);
     }
 }
