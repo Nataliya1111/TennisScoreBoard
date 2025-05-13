@@ -2,11 +2,13 @@ package com.nataliya.model;
 
 import com.nataliya.model.entity.Player;
 import lombok.Getter;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.UUID;
 
 @Getter
+@Setter
 @ToString
 public class OngoingMatch {
 

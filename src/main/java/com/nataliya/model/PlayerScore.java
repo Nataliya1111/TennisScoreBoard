@@ -30,4 +30,7 @@ public class PlayerScore {
         tieBreakPoints = 0;
     }
 
+    public void setGamesToZero(){
+        games = 0;
+    }
 }

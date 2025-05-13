@@ -1,6 +1,7 @@
 package com.nataliya._temporary;
 
 import com.nataliya.dto.NewMatchDto;
+import com.nataliya.model.MatchState;
 import com.nataliya.model.OngoingMatch;
 import com.nataliya.service.OngoingMatchService;
 import com.nataliya.service.ScoreCountService;
@@ -29,6 +30,13 @@ public class TestHibernate {
         System.out.println("3" + scoreCountService.updateScore(ongoingMatch, ongoingMatch.getPlayer2().getId()));
         System.out.println("4" + scoreCountService.updateScore(ongoingMatch, ongoingMatch.getPlayer1().getId()));
 
+
+        MatchState matchState = ongoingMatch.getMatchState();
+        System.out.println(matchState);
+        matchState = MatchState.TIE_BREAK;
+        System.out.println(matchState);
+        matchState = MatchState.FINISHED;
+        System.out.println(matchState);
 
 
 //        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();

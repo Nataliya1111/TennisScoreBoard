@@ -18,5 +18,4 @@ public enum Points {
     public String getLabel() {
         return label;
     }
-
 }

@@ -1,11 +1,15 @@
 package com.nataliya.service;
 
+import com.nataliya.exception.InvalidStageStateException;
 import com.nataliya.model.*;
+import com.nataliya.service.scoremanager.GameStageManager;
+import com.nataliya.service.scoremanager.MatchStageManager;
+import com.nataliya.service.scoremanager.ScoreStageManager;
+import com.nataliya.service.scoremanager.SetStageManager;
+
+import java.util.List;
 
 public class ScoreCountService {
-
-    private static final int GAMES_FOR_TIE_BREAK = 6;
-    private static final int TIE_BREAK_POINTS_MAX = 7;
 
     public Score updateScore(OngoingMatch match, Long pointWinnerId){
 
@@ -14,41 +18,33 @@ public class ScoreCountService {
         PlayerScore player2Score = score.getPlayer2Score();
 
         if (pointWinnerId.equals(match.getPlayer1().getId())){
-            updatePlayersScores(player1Score, player2Score, match.getMatchState());
+            updatePlayersScores(player1Score, player2Score, match);
         }
         else if (pointWinnerId.equals(match.getPlayer2().getId())) {
-            updatePlayersScores(player2Score, player1Score, match.getMatchState());
+            updatePlayersScores(player2Score, player1Score, match);
         }
-        else throw new IllegalStateException("Point winner ID does not match any player in the match");
-
-
+        else throw new InvalidStageStateException("Point winner ID does not match any player in the match");
         return score;
     }
 
-    private void updatePlayersScores(PlayerScore pointWinnerScore, PlayerScore pointLoserScore, MatchState matchState){
+    private void updatePlayersScores(PlayerScore pointWinnerScore, PlayerScore pointLoserScore, OngoingMatch ongoingMatch){
 
-        if (matchState == MatchState.FINISHED){
-            throw new IllegalStateException("Match is already finished");
-        } else if (matchState == MatchState.TIE_BREAK) {
-            //updateTieBreakPoint(pointWinnerScore, pointLoserScore);
-        } else {
-            //updatePoints(pointWinnerScore, pointLoserScore);
-        }
-        updatePoints(pointWinnerScore, pointLoserScore);
-
-        if (pointWinnerScore.getPoints() == Points.GAME){
-            pointWinnerScore.incrementGames();
-            pointWinnerScore.setPointsToZero();
-            pointLoserScore.setPointsToZero();
-        }
-        if (pointWinnerScore.getGames() == GAMES_FOR_TIE_BREAK && pointLoserScore.getGames() == GAMES_FOR_TIE_BREAK){
-            matchState = MatchState.TIE_BREAK;
-            return;
+        switch (ongoingMatch.getMatchState()){
+            case ONGOING -> updatePoints(pointWinnerScore, pointLoserScore);
+            case TIE_BREAK -> pointWinnerScore.incrementTieBreakPoints();
+            case FINISHED -> throw new InvalidStageStateException("Invalid operation: match is already in FINISHED state");
         }
 
-
-
-
+        GameStageManager gameManager = new GameStageManager(pointWinnerScore,pointLoserScore,ongoingMatch);
+        SetStageManager setManager = new SetStageManager(pointWinnerScore, pointLoserScore, ongoingMatch);
+        MatchStageManager matchManager = new MatchStageManager(pointWinnerScore, pointLoserScore, ongoingMatch);
+        List<ScoreStageManager> scoreStageManagers = List.of(gameManager, setManager, matchManager);
+        for(ScoreStageManager scoreStageManager : scoreStageManagers){
+            if (!scoreStageManager.isStageComplete()){
+                break;
+            }
+            scoreStageManager.handleStage();
+        }
     }
 
     private void updatePoints(PlayerScore pointWinnerScore, PlayerScore pointLoserScore) {
@@ -79,24 +75,10 @@ public class ScoreCountService {
                 loserPoints = Points.FORTY;
             }
             case ADVANTAGE -> winnerPoints = Points.GAME;
-            case GAME -> throw new IllegalStateException("Cannot score after game is already won");
+            case GAME -> throw new InvalidStageStateException("Cannot score after game is already won");
         }
         pointWinnerScore.setPoints(winnerPoints);
         pointLoserScore.setPoints(loserPoints);
     }
 
-
-
-    private boolean isGameWon(PlayerScore playerScore){
-        return playerScore.getPoints() == Points.LOVE;
-    }
-
 }
-//создать чекеры и проверять все сразу через коллекцию
-
-//Condition - check-er isConditionsForTieBreak
-
-//if game is finished   //isStageComplete()
-
-//ScoreUnitsManager //MatchFinishManager //GameController
-// I want to create separate classes for sets, games, match, tie-break managing - in each class will be methods isConditionCame and performActionAfterConditions. How should I name this classes, one abstract class for them and to name my methods better?
