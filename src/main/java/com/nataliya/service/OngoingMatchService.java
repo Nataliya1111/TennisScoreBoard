@@ -17,10 +17,18 @@ import java.util.UUID;
 
 public class OngoingMatchService {
 
+    private static final OngoingMatchService INSTANCE = new OngoingMatchService();
+
+    private OngoingMatchService(){
+    }
+
     private final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
     private final PlayerDao playerDao = new PlayerDao(sessionFactory);
-    private final Map<UUID, Score> ongoingMatches = new HashMap<>();
+    private final Map<UUID, OngoingMatch> ongoingMatches = new HashMap<>();
 
+    public OngoingMatch getOngoingMatch(UUID uuid){
+        return ongoingMatches.get(uuid);
+    }
 
     public OngoingMatch createOngoingMatch(NewMatchDto newMatchDto){
 
@@ -28,9 +36,13 @@ public class OngoingMatchService {
         Player player2 = getPlayer(newMatchDto.getPlayer2Name());
 
         OngoingMatch ongoingMatch = new OngoingMatch(player1, player2);
-        ongoingMatches.put(ongoingMatch.getUuid(), ongoingMatch.getScore());
+        ongoingMatches.put(ongoingMatch.getUuid(), ongoingMatch);
 
         return ongoingMatch;
+    }
+
+    public static OngoingMatchService getInstance(){
+        return INSTANCE;
     }
 
     private Player getPlayer(String name){
@@ -39,7 +51,6 @@ public class OngoingMatchService {
             session = sessionFactory.getCurrentSession();
             session.beginTransaction();
             Player player = playerDao.findByName(name).orElseGet(() -> playerDao.save(new Player(name)));
-            //System.out.println(player);
             session.getTransaction().commit();
             return player;
         }

@@ -8,7 +8,7 @@ public class PlayerScore {
     private int sets = 0;
     private int games = 0;
     private Points points = Points.LOVE;
-    private int tieBreakPoints;
+    private int tieBreakPoints = 0;
 
     public void incrementSets(){
         this.sets +=1;

@@ -2,6 +2,7 @@ package com.nataliya.servlet;
 
 import com.nataliya.dto.NewMatchDto;
 import com.nataliya.exception.InvalidRequestException;
+import com.nataliya.model.OngoingMatch;
 import com.nataliya.service.OngoingMatchService;
 import com.nataliya.util.JspUtil;
 import com.nataliya.util.ValidationUtil;
@@ -12,11 +13,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @WebServlet("/new-match")
 public class NewMatchServlet extends HttpServlet {
     private static final String NEW_MATCH_JSP_NAME = "new-match";
-    private static final String MATCH_SCORE_JSP_NAME = "match-score";
+    private static final String REDIRECT_NAME = "match-score?uuid=%s";
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -41,9 +44,12 @@ public class NewMatchServlet extends HttpServlet {
             return;
         }
 
-        final OngoingMatchService ongoingMatchService = new OngoingMatchService();
-        ongoingMatchService.createOngoingMatch(newMatchDto);
+        final OngoingMatchService ongoingMatchService = OngoingMatchService.getInstance();
+        OngoingMatch ongoingMatch = ongoingMatchService.createOngoingMatch(newMatchDto);
 
-        resp.sendRedirect(MATCH_SCORE_JSP_NAME);
+        String redirectLocation = String.format(REDIRECT_NAME, URLEncoder
+                .encode(ongoingMatch.getUuid().toString(), StandardCharsets.UTF_8));
+
+        resp.sendRedirect(redirectLocation);
     }
 }

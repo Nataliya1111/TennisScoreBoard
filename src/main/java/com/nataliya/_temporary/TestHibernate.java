@@ -13,7 +13,7 @@ public class TestHibernate {
     public static void main(String[] args) throws IOException {
 
 
-        OngoingMatchService ongoingMatchService = new OngoingMatchService();
+        OngoingMatchService ongoingMatchService = OngoingMatchService.getInstance();
         NewMatchDto newMatchDto = new NewMatchDto("Olga", "Ivan");
 
         OngoingMatch ongoingMatch = ongoingMatchService.createOngoingMatch(newMatchDto);
@@ -31,12 +31,13 @@ public class TestHibernate {
         System.out.println("4" + scoreCountService.updateScore(ongoingMatch, ongoingMatch.getPlayer1().getId()));
 
 
-        MatchState matchState = ongoingMatch.getMatchState();
-        System.out.println(matchState);
-        matchState = MatchState.TIE_BREAK;
-        System.out.println(matchState);
-        matchState = MatchState.FINISHED;
-        System.out.println(matchState);
+        while (ongoingMatch.getMatchState() != MatchState.FINISHED){
+            scoreCountService.updateScore(ongoingMatch, ongoingMatch.getPlayer1().getId());
+        }
+        System.out.println(ongoingMatch.getScore());
+        System.out.println(ongoingMatch.getMatchState());
+
+
 
 
 //        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
