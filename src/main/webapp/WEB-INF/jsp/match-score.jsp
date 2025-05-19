@@ -1,5 +1,6 @@
 
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <meta charset="UTF-8">
@@ -13,7 +14,10 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="css/style.css">
 
-    <script src="js/app.js"></script>
+    <script>
+        const contextPath = '${pageContext.request.contextPath}';
+    </script>
+    <script src="${pageContext.request.contextPath}/js/app.js"></script>
 </head>
 <body>
 <header class="header">
@@ -49,20 +53,20 @@
                 <tbody>
                 <tr class="player1">
                     <td class="table-text">${match.player1.name}</td>
-                    <td class="table-text">${match.score.player1Score.sets}</td>
-                    <td class="table-text">${match.score.player1Score.games}</td>
-                    <td class="table-text">${match.score.player1Score.points.label}</td>
+                    <td class="table-text" id="player1-sets">${match.score.player1Score.sets}</td>
+                    <td class="table-text" id="player1-games">${match.score.player1Score.games}</td>
+                    <td class="table-text" id="player1-points">${match.score.player1Score.points.label}</td>
                     <td class="table-text">
-                        <div class="score-btn">Score</div>
+                        <div class="score-btn" onclick="scorePoint('player1')">Score</div>
                     </td>
                 </tr>
                 <tr class="player2">
                     <td class="table-text">${match.player2.name}</td>
-                    <td class="table-text">${match.score.player2Score.sets}</td>
-                    <td class="table-text">${match.score.player2Score.games}</td>
-                    <td class="table-text">${match.score.player2Score.points.label}</td>
+                    <td class="table-text" id="player2-sets">${match.score.player2Score.sets}</td>
+                    <td class="table-text" id="player2-games">${match.score.player2Score.games}</td>
+                    <td class="table-text" id="player2-points">${match.score.player2Score.points.label}</td>
                     <td class="table-text">
-                        <div class="score-btn">Score</div>
+                        <div class="score-btn" onclick="scorePoint('player2')">Score</div>
                     </td>
                 </tr>
                 </tbody>

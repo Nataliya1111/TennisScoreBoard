@@ -3,6 +3,8 @@ package com.nataliya.util;
 import com.nataliya.dto.NewMatchDto;
 import com.nataliya.exception.InvalidRequestException;
 
+import java.util.UUID;
+
 public class ValidationUtil {
 
     private ValidationUtil(){
@@ -13,10 +15,10 @@ public class ValidationUtil {
         String player1Name = newMatchDto.getPlayer1Name();
         String player2Name = newMatchDto.getPlayer2Name();
 
-        if (isNameMissed(player1Name)){
+        if (isParameterMissed(player1Name)){
             throw new InvalidRequestException("Missing Player one name");
         }
-        if (isNameMissed(player2Name)){
+        if (isParameterMissed(player2Name)){
             throw new InvalidRequestException("Missing Player two name");
         }
         if(isNameInvalid(player1Name) && isNameInvalid(player2Name)){
@@ -33,7 +35,24 @@ public class ValidationUtil {
         }
     }
 
-    private static boolean isNameMissed(String name){
+    public static UUID getValidUuid(String uuid){
+        try {
+            return UUID.fromString(uuid);
+        } catch (IllegalArgumentException e) {
+            throw new InvalidRequestException("Invalid UUID", e);
+        }
+    }
+
+    public static void validatePointWinnerString(String pointWinner){
+        if (isParameterMissed(pointWinner)){
+            throw new InvalidRequestException("Missing player winner parameter");
+        }
+        if (!(pointWinner.equals("player1") || pointWinner.equals("player2"))){
+            throw new InvalidRequestException("Parameter 'player' can be only 'player1' or 'player2'");
+        }
+    }
+
+    private static boolean isParameterMissed(String name){
         return name == null || name.isBlank();
     }
 

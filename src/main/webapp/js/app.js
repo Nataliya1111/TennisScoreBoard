@@ -7,3 +7,30 @@ document.addEventListener("DOMContentLoaded", function () {
         navLinks.classList.toggle("active");
     });
 });
+
+//scoreUpdating
+function scorePoint(player) {
+    const uuid = new URLSearchParams(window.location.search).get("uuid");
+
+    fetch(`${contextPath}/match-score`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: `uuid=${uuid}&player=${player}`
+    })
+        .then(response => response.json())
+        .then(data => {
+            // Update scoreboard fields
+            document.getElementById("player1-sets").innerText = data.player1Score.sets;
+            document.getElementById("player1-games").innerText = data.player1Score.games;
+            document.getElementById("player1-points").innerText = data.player1Score.points;
+
+            document.getElementById("player2-sets").innerText = data.player2Score.sets;
+            document.getElementById("player2-games").innerText = data.player2Score.games;
+            document.getElementById("player2-points").innerText = data.player2Score.points;
+        })
+        .catch(error => {
+            console.error("Error updating score:", error);
+        });
+}

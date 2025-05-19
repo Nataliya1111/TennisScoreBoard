@@ -21,6 +21,8 @@ public class NewMatchServlet extends HttpServlet {
     private static final String NEW_MATCH_JSP_NAME = "new-match";
     private static final String REDIRECT_NAME = "match-score?uuid=%s";
 
+    private final OngoingMatchService ongoingMatchService = OngoingMatchService.getInstance();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         req.getRequestDispatcher(JspUtil.getPath(NEW_MATCH_JSP_NAME)).forward(req, resp);
@@ -44,7 +46,6 @@ public class NewMatchServlet extends HttpServlet {
             return;
         }
 
-        final OngoingMatchService ongoingMatchService = OngoingMatchService.getInstance();
         OngoingMatch ongoingMatch = ongoingMatchService.createOngoingMatch(newMatchDto);
 
         String redirectLocation = String.format(REDIRECT_NAME, URLEncoder

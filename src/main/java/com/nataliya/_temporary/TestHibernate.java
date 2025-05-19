@@ -1,10 +1,12 @@
 package com.nataliya._temporary;
 
 import com.nataliya.dto.NewMatchDto;
+import com.nataliya.dto.ScoreDto;
 import com.nataliya.model.MatchState;
 import com.nataliya.model.OngoingMatch;
 import com.nataliya.service.OngoingMatchService;
 import com.nataliya.service.ScoreCountService;
+import com.nataliya.util.MappingUtil;
 
 import java.io.IOException;
 
@@ -31,26 +33,19 @@ public class TestHibernate {
         System.out.println("4" + scoreCountService.updateScore(ongoingMatch, ongoingMatch.getPlayer1().getId()));
 
 
-        while (ongoingMatch.getMatchState() != MatchState.FINISHED){
-            scoreCountService.updateScore(ongoingMatch, ongoingMatch.getPlayer1().getId());
-        }
-        System.out.println(ongoingMatch.getScore());
-        System.out.println(ongoingMatch.getMatchState());
+        ScoreDto scoreDto = MappingUtil.convertToDto(ongoingMatch.getScore());
+        System.out.println(scoreDto);
 
-
-
-
-//        SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-//        PlayerDao playerDao = new PlayerDao(sessionFactory);
-//        String olga = "Olga";
-//
-//
-//        try (Session session = sessionFactory.getCurrentSession()) {
-//            session.beginTransaction();
-//            Player player = playerDao.findByName(olga).orElse(playerDao.save(new Player(olga)));
-//            System.out.println(player);
-//            session.getTransaction().commit();
+//        while (ongoingMatch.getMatchState() != MatchState.FINISHED){
+//            scoreCountService.updateScore(ongoingMatch, ongoingMatch.getPlayer1().getId());
 //        }
+//        System.out.println(ongoingMatch.getScore());
+//        System.out.println(ongoingMatch.getMatchState());
+
+
+
+
+
 
 
         //System.out.println("App is running... Press Enter to exit");
