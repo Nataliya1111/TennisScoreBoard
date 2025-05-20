@@ -23,7 +23,7 @@ public class ScoreCountService {
         else if (pointWinnerId.equals(match.getPlayer2().getId())) {
             updatePlayersScores(player2Score, player1Score, match);
         }
-        else throw new InvalidStageStateException("Point winner ID does not match any player in the match");
+        else throw new InvalidStageStateException("Invalid operation: Point winner ID does not match any player in the match");
         return score;
     }
 
@@ -75,7 +75,7 @@ public class ScoreCountService {
                 loserPoints = Points.FORTY;
             }
             case ADVANTAGE -> winnerPoints = Points.GAME;
-            case GAME -> throw new InvalidStageStateException("Cannot score after game is already won");
+            case GAME -> throw new InvalidStageStateException("Invalid operation: Cannot score after game is already won");
         }
         pointWinnerScore.setPoints(winnerPoints);
         pointLoserScore.setPoints(loserPoints);

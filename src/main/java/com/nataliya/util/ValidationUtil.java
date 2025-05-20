@@ -16,10 +16,10 @@ public class ValidationUtil {
         String player2Name = newMatchDto.getPlayer2Name();
 
         if (isParameterMissed(player1Name)){
-            throw new InvalidRequestException("Missing Player one name");
+            throw new InvalidRequestException("Invalid request: Missing Player one name");
         }
         if (isParameterMissed(player2Name)){
-            throw new InvalidRequestException("Missing Player two name");
+            throw new InvalidRequestException("Invalid request: Missing Player two name");
         }
         if(isNameInvalid(player1Name) && isNameInvalid(player2Name)){
             throw new InvalidRequestException("Invalid players names. Name: up to 20 characters - Latin letters or numbers");
@@ -31,7 +31,7 @@ public class ValidationUtil {
             throw new InvalidRequestException("Invalid Player two name. Name: up to 20 characters - Latin letters or numbers");
         }
         if(player1Name.equals(player2Name)){
-            throw new InvalidRequestException("Player names must be different");
+            throw new InvalidRequestException("Invalid request: Player names must be different");
         }
     }
 
@@ -39,16 +39,16 @@ public class ValidationUtil {
         try {
             return UUID.fromString(uuid);
         } catch (IllegalArgumentException e) {
-            throw new InvalidRequestException("Invalid UUID", e);
+            throw new InvalidRequestException("Bad request: Invalid or missed UUID", e);
         }
     }
 
     public static void validatePointWinnerString(String pointWinner){
         if (isParameterMissed(pointWinner)){
-            throw new InvalidRequestException("Missing player winner parameter");
+            throw new InvalidRequestException("Invalid operation: Missing player winner parameter");
         }
         if (!(pointWinner.equals("player1") || pointWinner.equals("player2"))){
-            throw new InvalidRequestException("Parameter 'player' can be only 'player1' or 'player2'");
+            throw new InvalidRequestException("Invalid operation: Parameter 'player' can be only 'player1' or 'player2'");
         }
     }
 

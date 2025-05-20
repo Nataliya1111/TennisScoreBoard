@@ -507,3 +507,16 @@ footer {
 .num-page.current {
     font-weight: bold;
 }
+
+.error-page {
+    border-radius: 30px;
+    margin-top: 20px;
+    text-align: center;
+}
+
+.error-image {
+    max-width: 300px; /* or % for responsive size */
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+}

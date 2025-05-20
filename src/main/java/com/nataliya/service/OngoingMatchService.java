@@ -3,6 +3,7 @@ package com.nataliya.service;
 import com.nataliya.dao.PlayerDao;
 import com.nataliya.dto.NewMatchDto;
 import com.nataliya.exception.DatabaseException;
+import com.nataliya.exception.InvalidRequestException;
 import com.nataliya.infrastructure.HibernateUtil;
 import com.nataliya.model.OngoingMatch;
 import com.nataliya.model.Score;
@@ -13,6 +14,7 @@ import org.hibernate.SessionFactory;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 public class OngoingMatchService {
@@ -27,8 +29,9 @@ public class OngoingMatchService {
     private final Map<UUID, OngoingMatch> ongoingMatches = new HashMap<>();
 
     public OngoingMatch getOngoingMatch(UUID uuid){
-        return ongoingMatches.get(uuid);
-    }
+        return Optional.ofNullable(ongoingMatches.get(uuid))
+                .orElseThrow(() -> new InvalidRequestException(String.format("Match with UUID %s doesn't exist or is already finished", uuid)));
+     }
 
     public OngoingMatch createOngoingMatch(NewMatchDto newMatchDto){
 
