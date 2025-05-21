@@ -57,7 +57,14 @@
                     <td class="table-text" id="player1-games">${match.score.player1Score.games}</td>
                     <td class="table-text" id="player1-points">${match.score.player1Score.points.label}</td>
                     <td class="table-text">
-                        <div class="score-btn" onclick="scorePoint('player1')">Score</div>
+                        <c:choose>
+                            <c:when test="${match.matchState == 'FINISHED'}">
+                                <div class="disabled-btn">Match is finished</div>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="score-btn" onclick="scorePoint('player1')">Score</div>
+                            </c:otherwise>
+                        </c:choose>
                     </td>
                 </tr>
                 <tr class="player2">
@@ -66,7 +73,14 @@
                     <td class="table-text" id="player2-games">${match.score.player2Score.games}</td>
                     <td class="table-text" id="player2-points">${match.score.player2Score.points.label}</td>
                     <td class="table-text">
-                        <div class="score-btn" onclick="scorePoint('player2')">Score</div>
+                        <c:choose>
+                            <c:when test="${match.matchState == 'FINISHED'}">
+                                <div class="disabled-btn">Match is finished</div>
+                            </c:when>
+                            <c:otherwise>
+                                <div class="score-btn" onclick="scorePoint('player2')">Score</div>
+                            </c:otherwise>
+                        </c:choose>
                     </td>
                 </tr>
                 </tbody>

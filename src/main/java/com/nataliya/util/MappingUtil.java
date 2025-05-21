@@ -3,6 +3,7 @@ package com.nataliya.util;
 import com.nataliya.dto.PlayerScoreDto;
 import com.nataliya.dto.ScoreDto;
 import com.nataliya.exception.InvalidStageStateException;
+import com.nataliya.model.MatchState;
 import com.nataliya.model.PlayerScore;
 import com.nataliya.model.Points;
 import com.nataliya.model.Score;
@@ -33,10 +34,10 @@ public class MappingUtil {
     private MappingUtil(){
     }
 
-    public static ScoreDto convertToDto(Score score){
+    public static ScoreDto convertToDto(Score score, MatchState matchState){
         PlayerScoreDto player1Score = MODEL_MAPPER.map(score.getPlayer1Score(), PlayerScoreDto.class);
         PlayerScoreDto player2Score = MODEL_MAPPER.map(score.getPlayer2Score(), PlayerScoreDto.class);
-        return new ScoreDto(player1Score, player2Score);
+        return new ScoreDto(player1Score, player2Score, matchState);
     }
 
     private static boolean isScoreNotValid(PlayerScore score){

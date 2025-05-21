@@ -29,6 +29,16 @@ function scorePoint(player) {
             document.getElementById("player2-sets").innerText = data.player2Score.sets;
             document.getElementById("player2-games").innerText = data.player2Score.games;
             document.getElementById("player2-points").innerText = data.player2Score.points;
+
+            if (data.matchState === "FINISHED") {
+                const buttons = document.querySelectorAll('.score-btn');
+                buttons.forEach(button => {
+                    button.innerText = "Match is finished";
+                    button.onclick = null;
+                    button.classList.add('disabled-btn');
+                });
+            }
+
         })
         .catch(error => {
             console.error("Error updating score:", error);

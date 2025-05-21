@@ -33,7 +33,7 @@ public class TestHibernate {
         System.out.println("4" + scoreCountService.updateScore(ongoingMatch, ongoingMatch.getPlayer1().getId()));
 
 
-        ScoreDto scoreDto = MappingUtil.convertToDto(ongoingMatch.getScore());
+        ScoreDto scoreDto = MappingUtil.convertToDto(ongoingMatch.getScore(), ongoingMatch.getMatchState());
         System.out.println(scoreDto);
 
 //        while (ongoingMatch.getMatchState() != MatchState.FINISHED){

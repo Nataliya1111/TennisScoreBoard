@@ -3,6 +3,7 @@ package com.nataliya.servlet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nataliya.dto.ScoreDto;
 import com.nataliya.exception.InvalidStageStateException;
+import com.nataliya.model.MatchState;
 import com.nataliya.model.OngoingMatch;
 import com.nataliya.model.Score;
 import com.nataliya.service.OngoingMatchService;
@@ -54,7 +55,16 @@ public class MatchScoreServlet extends HttpServlet {
         Long pointWinnerId = pointWinner.equals("player1") ? ongoingMatch.getPlayer1().getId() : ongoingMatch.getPlayer2().getId();
 
         Score newScore = scoreCountService.updateScore(ongoingMatch, pointWinnerId);
-        ScoreDto scoreDto = MappingUtil.convertToDto(newScore);
+        ScoreDto scoreDto = MappingUtil.convertToDto(newScore, ongoingMatch.getMatchState());
+
+        if (ongoingMatch.getMatchState() == MatchState.FINISHED){
+            //ongoingMatchService.delete(ongoingMatch);
+            //saveFinishedMatchService.save(match);
+            //render final score.
+
+        }
+
+        //может здесть поймать исключения
 
         objectMapper.writeValue(resp.getWriter(), scoreDto);
 
