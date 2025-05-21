@@ -4,6 +4,7 @@ import com.nataliya.dao.PlayerDao;
 import com.nataliya.dto.NewMatchDto;
 import com.nataliya.exception.DatabaseException;
 import com.nataliya.exception.InvalidRequestException;
+import com.nataliya.exception.NotFoundException;
 import com.nataliya.infrastructure.HibernateUtil;
 import com.nataliya.model.OngoingMatch;
 import com.nataliya.model.Score;
@@ -21,17 +22,16 @@ public class OngoingMatchService {
 
     private static final OngoingMatchService INSTANCE = new OngoingMatchService();
 
-    private OngoingMatchService(){
-    }
-
     private final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
     private final PlayerDao playerDao = new PlayerDao(sessionFactory);
     private final Map<UUID, OngoingMatch> ongoingMatches = new HashMap<>();
 
-    public OngoingMatch getOngoingMatch(UUID uuid){
-        return Optional.ofNullable(ongoingMatches.get(uuid))
-                .orElseThrow(() -> new InvalidRequestException(String.format("Match with UUID %s doesn't exist or is already finished", uuid)));
-     }
+    private OngoingMatchService(){
+    }
+
+    public static OngoingMatchService getInstance(){
+        return INSTANCE;
+    }
 
     public OngoingMatch createOngoingMatch(NewMatchDto newMatchDto){
 
@@ -44,8 +44,15 @@ public class OngoingMatchService {
         return ongoingMatch;
     }
 
-    public static OngoingMatchService getInstance(){
-        return INSTANCE;
+    public OngoingMatch getOngoingMatch(UUID uuid){
+        return Optional.ofNullable(ongoingMatches.get(uuid))
+                .orElseThrow(() -> new NotFoundException(String.format("Match with UUID %s doesn't exist or is already finished", uuid)));
+    }
+
+    public void deleteOngoingMatch(UUID uuid){
+        if(ongoingMatches.remove(uuid) == null){
+            throw new NotFoundException(String.format("Match with UUID %s doesn't exist or is already finished", uuid));
+        }
     }
 
     private Player getPlayer(String name){

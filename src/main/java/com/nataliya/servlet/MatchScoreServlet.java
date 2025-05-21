@@ -58,17 +58,13 @@ public class MatchScoreServlet extends HttpServlet {
         ScoreDto scoreDto = MappingUtil.convertToDto(newScore, ongoingMatch.getMatchState());
 
         if (ongoingMatch.getMatchState() == MatchState.FINISHED){
-            //ongoingMatchService.delete(ongoingMatch);
-            //saveFinishedMatchService.save(match);
-            //render final score.
+
+            //!!!!!!!!!!!!!saveFinishedMatchService.save(match);
+
+            ongoingMatchService.deleteOngoingMatch(uuid);
 
         }
 
-        //может здесть поймать исключения
-
         objectMapper.writeValue(resp.getWriter(), scoreDto);
-
-        //if finished
-
     }
 }
