@@ -2,6 +2,7 @@ package com.nataliya.dao;
 
 import com.nataliya.model.entity.Player;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.query.Query;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
+@Slf4j
 public class PlayerDao implements Dao<Long, Player>{
 
     private static final String GET_BY_NAME_QUERY = "from Player where name =:name";
@@ -19,6 +21,7 @@ public class PlayerDao implements Dao<Long, Player>{
     public Player save(Player player) {
         Session session = sessionFactory.getCurrentSession();
         session.persist(player);
+        log.info("Player with name {} has been saved", player.getName());
         return player;
     }
 

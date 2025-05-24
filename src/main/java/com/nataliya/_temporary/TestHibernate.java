@@ -9,6 +9,7 @@ import com.nataliya.service.ScoreCountService;
 import com.nataliya.util.MappingUtil;
 
 import java.io.IOException;
+import java.util.UUID;
 
 public class TestHibernate {
 
@@ -35,6 +36,7 @@ public class TestHibernate {
 
         ScoreDto scoreDto = MappingUtil.convertToDto(ongoingMatch.getScore(), ongoingMatch.getMatchState());
         System.out.println(scoreDto);
+
 
 //        while (ongoingMatch.getMatchState() != MatchState.FINISHED){
 //            scoreCountService.updateScore(ongoingMatch, ongoingMatch.getPlayer1().getId());

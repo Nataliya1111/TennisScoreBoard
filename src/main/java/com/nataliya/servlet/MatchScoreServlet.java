@@ -2,7 +2,6 @@ package com.nataliya.servlet;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nataliya.dto.ScoreDto;
-import com.nataliya.exception.InvalidStageStateException;
 import com.nataliya.model.MatchState;
 import com.nataliya.model.OngoingMatch;
 import com.nataliya.model.Score;
@@ -17,9 +16,7 @@ import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import javax.management.ObjectName;
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 

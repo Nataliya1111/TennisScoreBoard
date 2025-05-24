@@ -9,7 +9,7 @@ public enum Points {
     DEUCE("40"),
     GAME("game");
 
-    private String label;
+    final private String label;
 
     Points(String label) {
         this.label = label;

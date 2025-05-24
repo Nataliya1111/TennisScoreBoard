@@ -6,5 +6,5 @@ import lombok.NonNull;
 public enum MatchState {
     ONGOING,
     TIE_BREAK,
-    FINISHED;
+    FINISHED
 }
