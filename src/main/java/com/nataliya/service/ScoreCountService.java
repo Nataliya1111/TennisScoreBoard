@@ -50,6 +50,9 @@ public class ScoreCountService {
     private void updatePoints(PlayerScore pointWinnerScore, PlayerScore pointLoserScore) {
         Points winnerPoints = pointWinnerScore.getPoints();
         Points loserPoints = pointLoserScore.getPoints();
+        if (isPointsStageNotValid(winnerPoints, loserPoints)){
+            throw new InvalidStageStateException(String.format("Invalid operation: points can't be %s and %s at the same time", winnerPoints, loserPoints));
+        }
         switch (winnerPoints){
             case LOVE -> winnerPoints = Points.FIFTEEN;
             case FIFTEEN -> winnerPoints = Points.THIRTY;
@@ -79,6 +82,19 @@ public class ScoreCountService {
         }
         pointWinnerScore.setPoints(winnerPoints);
         pointLoserScore.setPoints(loserPoints);
+    }
+
+    private boolean isPointsStageNotValid(Points player1Points, Points player2Points){
+        if(player1Points == Points.DEUCE || player2Points == Points.DEUCE) {
+            return player2Points != Points.DEUCE || player1Points != Points.DEUCE;
+        }
+        if(player1Points == Points.ADVANTAGE){
+            return player2Points != Points.FORTY;
+        }
+        if(player2Points == Points.ADVANTAGE){
+            return player1Points != Points.FORTY;
+        }
+        return false;
     }
 
 }
