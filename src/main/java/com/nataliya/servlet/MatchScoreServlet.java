@@ -5,6 +5,8 @@ import com.nataliya.dto.ScoreDto;
 import com.nataliya.model.MatchState;
 import com.nataliya.model.OngoingMatch;
 import com.nataliya.model.Score;
+import com.nataliya.model.entity.Player;
+import com.nataliya.service.FinishedMatchPersistenceService;
 import com.nataliya.service.OngoingMatchService;
 import com.nataliya.service.ScoreCountService;
 import com.nataliya.util.JspUtil;
@@ -25,6 +27,7 @@ public class MatchScoreServlet extends HttpServlet {
 
     private static final String MATCH_SCORE_JSP_NAME = "match-score";
     private final OngoingMatchService ongoingMatchService = OngoingMatchService.getInstance();
+    private final FinishedMatchPersistenceService finishedMatchPersistenceService = FinishedMatchPersistenceService.getInstance();
     private final ScoreCountService scoreCountService = new ScoreCountService();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -45,21 +48,20 @@ public class MatchScoreServlet extends HttpServlet {
         resp.setContentType("application/json");
 
         UUID uuid = ValidationUtil.getValidUuid(req.getParameter("uuid"));
-        String pointWinner = req.getParameter("player");
-        ValidationUtil.validatePointWinnerString(pointWinner);
+        String pointWinningPlayer = req.getParameter("player");
+        ValidationUtil.validatePointWinnerString(pointWinningPlayer);
 
         OngoingMatch ongoingMatch = ongoingMatchService.getOngoingMatch(uuid);
-        Long pointWinnerId = pointWinner.equals("player1") ? ongoingMatch.getPlayer1().getId() : ongoingMatch.getPlayer2().getId();
+        Player pointWinner = pointWinningPlayer.equals("player1") ? ongoingMatch.getPlayer1() : ongoingMatch.getPlayer2();
+        Long pointWinnerId = pointWinner.getId();
 
         Score newScore = scoreCountService.updateScore(ongoingMatch, pointWinnerId);
         ScoreDto scoreDto = MappingUtil.convertToDto(newScore, ongoingMatch.getMatchState());
 
         if (ongoingMatch.getMatchState() == MatchState.FINISHED){
 
-            //!!!!!!!!!!!!!saveFinishedMatchService.save(match);
-
+            finishedMatchPersistenceService.saveFinishedMatch(ongoingMatch, pointWinner);
             ongoingMatchService.deleteOngoingMatch(uuid);
-
         }
 
         objectMapper.writeValue(resp.getWriter(), scoreDto);

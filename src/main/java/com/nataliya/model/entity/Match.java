@@ -7,11 +7,12 @@ import org.hibernate.annotations.Check;
 @Entity
 @Table(name = "Matches")
 @Check(constraints = "player1_id<>player2_id")
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @ToString(onlyExplicitlyIncluded = true)
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+@Builder
 public class Match {
 
     @Id
