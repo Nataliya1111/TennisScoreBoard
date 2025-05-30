@@ -9,6 +9,9 @@ public class HibernateUtil {
 
     private static final SessionFactory SESSION_FACTORY = buildSessionFactory();
 
+    private HibernateUtil(){
+    }
+
     public static SessionFactory getSessionFactory(){
         return SESSION_FACTORY;
     }
