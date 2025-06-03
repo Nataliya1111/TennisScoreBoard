@@ -35,5 +35,4 @@ public class Match {
     @JoinColumn(name = "winner_id", referencedColumnName = "id")
     private Player winner;
 
-
 }

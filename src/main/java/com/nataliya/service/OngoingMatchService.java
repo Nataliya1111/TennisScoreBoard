@@ -2,14 +2,12 @@ package com.nataliya.service;
 
 import com.nataliya.dao.PlayerDao;
 import com.nataliya.dto.NewMatchDto;
-import com.nataliya.exception.DatabaseException;
 import com.nataliya.exception.NotFoundException;
-import com.nataliya.infrastructure.HibernateUtil;
+import com.nataliya.infrastructure.SessionFactoryProvider;
+import com.nataliya.infrastructure.TransactionManager;
 import com.nataliya.model.OngoingMatch;
 import com.nataliya.model.entity.Player;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.HibernateException;
-import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
 import java.util.Map;
@@ -22,7 +20,7 @@ public class OngoingMatchService {
 
     private static final OngoingMatchService INSTANCE = new OngoingMatchService();
 
-    private final SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+    private final SessionFactory sessionFactory = SessionFactoryProvider.getSessionFactory();
     private final PlayerDao playerDao = new PlayerDao(sessionFactory);
     private final Map<UUID, OngoingMatch> ongoingMatches = new ConcurrentHashMap<>();
 
@@ -58,19 +56,10 @@ public class OngoingMatchService {
     }
 
     private Player getPlayer(String name){
-        Session session = null;
-        try {
-            session = sessionFactory.getCurrentSession();
-            session.beginTransaction();
+        TransactionManager transactionManager = new TransactionManager();
+        return transactionManager.runInTransaction(()  -> {
             Player player = playerDao.findByName(name).orElseGet(() -> playerDao.save(new Player(name)));
-            session.getTransaction().commit();
             return player;
-        }
-        catch (HibernateException e){
-            if(session != null && session.getTransaction().isActive()){
-                session.getTransaction().rollback();
-            }
-            throw new DatabaseException("Execute operation error", e);
-        }
+        });
     }
 }

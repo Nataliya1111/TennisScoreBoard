@@ -5,6 +5,7 @@ import com.nataliya.dto.ScoreDto;
 import com.nataliya.model.MatchState;
 import com.nataliya.model.OngoingMatch;
 import com.nataliya.model.Score;
+import com.nataliya.model.entity.Match;
 import com.nataliya.model.entity.Player;
 import com.nataliya.service.FinishedMatchPersistenceService;
 import com.nataliya.service.OngoingMatchService;
@@ -59,8 +60,9 @@ public class MatchScoreServlet extends HttpServlet {
         ScoreDto scoreDto = MappingUtil.convertToDto(newScore, ongoingMatch.getMatchState());
 
         if (ongoingMatch.getMatchState() == MatchState.FINISHED){
-
-            finishedMatchPersistenceService.saveFinishedMatch(ongoingMatch, pointWinner);
+            Match finishedMatch = Match.builder().player1(ongoingMatch.getPlayer1())
+                    .player2(ongoingMatch.getPlayer2()).winner(pointWinner).build();
+            finishedMatchPersistenceService.saveFinishedMatch(finishedMatch);
             ongoingMatchService.deleteOngoingMatch(uuid);
         }
 

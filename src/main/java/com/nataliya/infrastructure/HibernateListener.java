@@ -11,13 +11,13 @@ public class HibernateListener implements ServletContextListener {
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
-        HibernateUtil.getSessionFactory();
+        SessionFactoryProvider.getSessionFactory();
         log.info("Hibernate SessionFactory initialized successfully during application startup");
     }
 
     @Override
     public void contextDestroyed(ServletContextEvent sce) {
-        HibernateUtil.shutdown();
+        SessionFactoryProvider.shutdown();
         log.info("Hibernate SessionFactory shut down gracefully during application shutdown");
     }
 }

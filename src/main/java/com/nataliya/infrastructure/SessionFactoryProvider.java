@@ -5,11 +5,11 @@ import com.nataliya.model.entity.Player;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 
-public class HibernateUtil {
+public class SessionFactoryProvider {
 
     private static final SessionFactory SESSION_FACTORY = buildSessionFactory();
 
-    private HibernateUtil(){
+    private SessionFactoryProvider(){
     }
 
     public static SessionFactory getSessionFactory(){
