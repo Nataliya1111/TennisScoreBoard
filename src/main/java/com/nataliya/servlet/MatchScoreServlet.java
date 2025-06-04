@@ -7,7 +7,7 @@ import com.nataliya.model.OngoingMatch;
 import com.nataliya.model.Score;
 import com.nataliya.model.entity.Match;
 import com.nataliya.model.entity.Player;
-import com.nataliya.service.FinishedMatchPersistenceService;
+import com.nataliya.service.PersistentMatchService;
 import com.nataliya.service.OngoingMatchService;
 import com.nataliya.service.ScoreCountService;
 import com.nataliya.util.JspUtil;
@@ -28,7 +28,7 @@ public class MatchScoreServlet extends HttpServlet {
 
     private static final String MATCH_SCORE_JSP_NAME = "match-score";
     private final OngoingMatchService ongoingMatchService = OngoingMatchService.getInstance();
-    private final FinishedMatchPersistenceService finishedMatchPersistenceService = FinishedMatchPersistenceService.getInstance();
+    private final PersistentMatchService persistentMatchService = PersistentMatchService.getInstance();
     private final ScoreCountService scoreCountService = new ScoreCountService();
     private final ObjectMapper objectMapper = new ObjectMapper();
 
@@ -62,7 +62,7 @@ public class MatchScoreServlet extends HttpServlet {
         if (ongoingMatch.getMatchState() == MatchState.FINISHED){
             Match finishedMatch = Match.builder().player1(ongoingMatch.getPlayer1())
                     .player2(ongoingMatch.getPlayer2()).winner(pointWinner).build();
-            finishedMatchPersistenceService.saveFinishedMatch(finishedMatch);
+            persistentMatchService.saveFinishedMatch(finishedMatch);
             ongoingMatchService.deleteOngoingMatch(uuid);
         }
 
