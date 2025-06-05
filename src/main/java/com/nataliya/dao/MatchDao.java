@@ -14,7 +14,7 @@ import java.util.List;
 public class MatchDao implements Dao<Long, Match>{
 
     private static final String GET_ALL = "from Match order by id";
-    private static final String GET_BY_PLAYER1_NAME = "from Match where player1 =:player or player2 =:player";
+    private static final String GET_BY_PLAYER_NAME = "from Match where lower(player1.name) like :name or lower(player2.name) like :name escape '\\'";
     private final SessionFactory sessionFactory;
 
     @Override
@@ -32,11 +32,12 @@ public class MatchDao implements Dao<Long, Match>{
         return matches;
     }
 
-    public List<Match> getByPlayer(Player player){
+    public List<Match> getByName(String name){
+        name = name.replace("%", "\\%").replace("_", "\\_");
         Session session = sessionFactory.getCurrentSession();
-        List<Match> matches = session.createQuery(GET_BY_PLAYER1_NAME, Match.class)
-                .setParameter("player", player).getResultList();
-        log.info("List of matches with player {} has been gotten", player);
+        List<Match> matches = session.createQuery(GET_BY_PLAYER_NAME, Match.class)
+                .setParameter("name", name.toLowerCase() + "%").getResultList();
+        log.info("List of matches with player {} has been gotten", name);
         return matches;
     }
 }

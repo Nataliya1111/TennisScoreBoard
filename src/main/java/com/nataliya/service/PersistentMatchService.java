@@ -4,7 +4,6 @@ import com.nataliya.dao.MatchDao;
 import com.nataliya.infrastructure.SessionFactoryProvider;
 import com.nataliya.infrastructure.TransactionManager;
 import com.nataliya.model.entity.Match;
-import com.nataliya.model.entity.Player;
 import org.hibernate.SessionFactory;
 
 import java.util.List;
@@ -31,8 +30,8 @@ public class PersistentMatchService {
         return transactionManager.runInTransaction(() -> matchDao.getAll());
     }
 
-    public List<Match> getPersistentMatchesByPlayer(Player player){
-        return transactionManager.runInTransaction(() -> matchDao.getByPlayer(player));
+    public List<Match> getPersistentMatchesByName(String name){
+        return transactionManager.runInTransaction(() -> matchDao.getByName(name));
     }
 
 }

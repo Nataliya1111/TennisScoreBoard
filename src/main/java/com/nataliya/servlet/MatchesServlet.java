@@ -22,9 +22,14 @@ public class MatchesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String page = req.getParameter("page");
-        String filterByPlayerName = req.getParameter("filter_by_player_name");
+        String name = req.getParameter("filter_by_player_name");
 
-        List<Match> matches = persistentMatchService.getPersistentMatches();
+        List<Match> matches = (name == null || name.isBlank()) ? persistentMatchService.getPersistentMatches()
+                : persistentMatchService.getPersistentMatchesByName(name);
+        if (matches.isEmpty()){
+            req.setAttribute("Not_found_message", "Matches with such player haven't been found");
+        }
+
         req.setAttribute("matches", matches);
         req.getRequestDispatcher(JspUtil.getPath(MATCHES_JSP_NAME)).forward(req, resp);
     }

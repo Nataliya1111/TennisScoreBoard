@@ -64,6 +64,9 @@
                 </tr>
             </c:forEach>
         </table>
+        <c:if test="${not empty Not_found_message}">
+            <p style="color: blue;">${Not_found_message}</p>
+        </c:if>
 
         <div class="pagination">
             <a class="prev" href="#"> < </a>
