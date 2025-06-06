@@ -6,7 +6,6 @@ import com.nataliya.infrastructure.TransactionManager;
 import com.nataliya.model.entity.Match;
 import org.hibernate.SessionFactory;
 
-import java.util.List;
 
 public class PersistentMatchService {
 
@@ -24,14 +23,6 @@ public class PersistentMatchService {
 
     public void saveFinishedMatch(Match finishedMatch) {
         transactionManager.runInTransaction(() -> matchDao.save(finishedMatch));
-    }
-
-    public List<Match> getPersistentMatches(){
-        return transactionManager.runInTransaction(() -> matchDao.getAll());
-    }
-
-    public List<Match> getPersistentMatchesByName(String name){
-        return transactionManager.runInTransaction(() -> matchDao.getByName(name));
     }
 
 }

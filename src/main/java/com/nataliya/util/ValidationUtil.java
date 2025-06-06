@@ -52,8 +52,17 @@ public class ValidationUtil {
         }
     }
 
-    private static boolean isParameterMissed(String name){
-        return name == null || name.isBlank();
+    public static int getValidPageNumber(String page){
+        try {
+            int pageNumber = Integer.parseInt(page);
+            return pageNumber >= 0 ? pageNumber : 1;
+        } catch (NumberFormatException e) {
+            return 1;
+        }
+    }
+
+    private static boolean isParameterMissed(String parameter){
+        return parameter == null || parameter.isBlank();
     }
 
     private static boolean isNameInvalid(String name){

@@ -33,7 +33,9 @@
 <main>
     <div class="container">
         <h1>Matches</h1>
-            <form class="input-container" method="get" action="${pageContext.request.contextPath}/matches?page=1">
+            <form class="input-container" method="get" action="${pageContext.request.contextPath}/matches">
+                <input type="hidden" name="page" value="1" />
+
                 <input
                         class="input-filter"
                         placeholder="Filter by name"
@@ -56,7 +58,7 @@
                 <th>Player Two</th>
                 <th>Winner</th>
             </tr>
-            <c:forEach var="match" items="${matches}">
+            <c:forEach var="match" items="${matches_response_dto.matches}">
                 <tr>
                     <td>${match.player1.name}</td>
                     <td>${match.player2.name}</td>
@@ -64,8 +66,8 @@
                 </tr>
             </c:forEach>
         </table>
-        <c:if test="${not empty Not_found_message}">
-            <p style="color: blue;">${Not_found_message}</p>
+        <c:if test="${not empty matches_response_dto.notFoundMessage}">
+            <p style="color: blue;">${matches_response_dto.notFoundMessage}</p>
         </c:if>
 
         <div class="pagination">

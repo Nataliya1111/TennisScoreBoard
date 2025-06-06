@@ -1,8 +1,11 @@
 package com.nataliya.servlet;
 
+import com.nataliya.dto.MatchesResponseDto;
 import com.nataliya.model.entity.Match;
+import com.nataliya.service.MatchPaginationService;
 import com.nataliya.service.PersistentMatchService;
 import com.nataliya.util.JspUtil;
+import com.nataliya.util.ValidationUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -17,20 +20,35 @@ public class MatchesServlet extends HttpServlet {
 
     private static final String MATCHES_JSP_NAME = "matches";
     private final PersistentMatchService persistentMatchService = PersistentMatchService.getInstance();
+    private final MatchPaginationService matchPaginationService = MatchPaginationService.getInstance();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
-        String page = req.getParameter("page");
         String name = req.getParameter("filter_by_player_name");
+        int pageNumber = ValidationUtil.getValidPageNumber(req.getParameter("page"));
 
-        List<Match> matches = (name == null || name.isBlank()) ? persistentMatchService.getPersistentMatches()
-                : persistentMatchService.getPersistentMatchesByName(name);
-        if (matches.isEmpty()){
-            req.setAttribute("Not_found_message", "Matches with such player haven't been found");
+        List<Match> matches;
+        int pagesQuantity;
+        String notFoundMessage = null;
+
+        if (name == null || name.isBlank()){
+            matches = matchPaginationService.getOneMatchesPage(pageNumber);
+            pagesQuantity = matchPaginationService.getLastPageNumber();
+            if (matches.isEmpty()){
+                notFoundMessage =  "No matches found";
+            }
+        } else{
+            matches = matchPaginationService.getOneMatchesPageByName(name, pageNumber);
+            pagesQuantity = matchPaginationService.getLastPageNumberByName(name);
+            if (matches.isEmpty()){
+                notFoundMessage = String.format("Matches with player %s not found", name);
+            }
         }
 
-        req.setAttribute("matches", matches);
+        MatchesResponseDto matchesResponseDto = new MatchesResponseDto(matches, pagesQuantity, notFoundMessage);
+
+        req.setAttribute("matches_response_dto", matchesResponseDto);
         req.getRequestDispatcher(JspUtil.getPath(MATCHES_JSP_NAME)).forward(req, resp);
     }
 }
