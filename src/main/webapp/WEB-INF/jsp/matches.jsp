@@ -1,5 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<c:set var="filterParam" value="${not empty param.filter_by_player_name ? '&filter_by_player_name=' += param.filter_by_player_name : ''}" />
+
 <html>
 <head>
     <meta charset="UTF-8">
@@ -71,11 +74,33 @@
         </c:if>
 
         <div class="pagination">
-            <a class="prev" href="#"> < </a>
-            <a class="num-page current" href="#">1</a>
-            <a class="num-page" href="#">2</a>
-            <a class="num-page" href="#">3</a>
-            <a class="next" href="#"> > </a>
+            <c:if test="${matches_response_dto.currentPage > 1}">
+                <a class="prev" href="matches?page=${matches_response_dto.currentPage - 1}${filterParam}">&lt;</a>
+            </c:if>
+            <c:if test="${matches_response_dto.currentPage == 1}">
+                <a class="prev">&lt;</a>
+            </c:if>
+
+            <c:forEach var="page" items="${matches_response_dto.pagesToShow}">
+                <c:choose>
+                    <c:when test="${page == -1}">
+                        <a class="num-page">...</a>
+                    </c:when>
+                    <c:when test="${page == matches_response_dto.currentPage}">
+                        <a class="num-page current" href="#">${page}</a>
+                    </c:when>
+                    <c:otherwise>
+                        <a class="num-page" href="matches?page=${page}${filterParam}">${page}</a>
+                    </c:otherwise>
+                </c:choose>
+            </c:forEach>
+
+            <c:if test="${matches_response_dto.currentPage < matches_response_dto.lastPage}">
+                <a class="next" href="matches?page=${matches_response_dto.currentPage + 1}${filterParam}">&gt;</a>
+            </c:if>
+            <c:if test="${matches_response_dto.currentPage == matches_response_dto.lastPage}">
+                <a class="next">&gt;</a>
+            </c:if>
         </div>
     </div>
 </main>

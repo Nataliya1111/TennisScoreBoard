@@ -6,6 +6,7 @@ import com.nataliya.infrastructure.TransactionManager;
 import com.nataliya.model.entity.Match;
 import org.hibernate.SessionFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MatchPaginationService {
@@ -40,6 +41,21 @@ public class MatchPaginationService {
     public int getLastPageNumberByName(String name){
         int matchesQuantity = transactionManager.runInTransaction(() -> matchDao.getMatchesByNameQuantity(name));
         return (int) Math.ceil((double) matchesQuantity / PAGE_SIZE);
+    }
+
+    public List<Integer> getPagesToShow(int lastPage, int currentPage){
+        List<Integer> pagesToShow = new ArrayList<>();
+
+        if (lastPage <= 5) {
+            for (int i = 1; i <= lastPage; i++) pagesToShow.add(i);
+        } else if (currentPage <= 3) {
+            pagesToShow = List.of(1, 2, 3, -1, lastPage); // -1 will mean '...'
+        } else if (currentPage >= lastPage - 2) {
+            pagesToShow = List.of(1, -1, lastPage - 2, lastPage - 1, lastPage);
+        } else {
+            pagesToShow = List.of(1, -1, currentPage, -1, lastPage);
+        }
+        return pagesToShow;
     }
 
 }

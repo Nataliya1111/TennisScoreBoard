@@ -19,18 +19,42 @@ public class TablesDataInitializer implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
 
-        Player ivan = getPlayer("Ivan");
-        Player petr = getPlayer("Petr");
-        Player maria = getPlayer("Maria");
-        Player irina = getPlayer("Irina");
+        Player john = getPlayer("John");
+        Player paul = getPlayer("Paul");
+        Player george = getPlayer("George");
+        Player richard = getPlayer("Richard");
 
-        saveFinishedMatch(ivan, petr, petr);
-        saveFinishedMatch(maria, irina, irina);
-        saveFinishedMatch(ivan, maria, maria);
-        saveFinishedMatch(ivan, irina, irina);
-        saveFinishedMatch(maria, petr, petr);
-        saveFinishedMatch(ivan, irina, ivan);
-        saveFinishedMatch(irina, ivan, ivan);
+        saveFinishedMatch(john, paul, paul);
+        saveFinishedMatch(george, richard, richard);
+        saveFinishedMatch(john, george, george);
+        saveFinishedMatch(john, richard, richard);
+        saveFinishedMatch(george, paul, paul);
+        saveFinishedMatch(john, richard, john);
+        saveFinishedMatch(richard, paul, paul);
+        saveFinishedMatch(paul, john, paul);
+        saveFinishedMatch(george, john, george);
+        saveFinishedMatch(richard, john, richard);
+        saveFinishedMatch(john, paul, paul);
+        saveFinishedMatch(george, richard, richard);
+        saveFinishedMatch(john, george, george);
+        saveFinishedMatch(john, richard, richard);
+        saveFinishedMatch(george, paul, paul);
+        saveFinishedMatch(john, richard, john);
+        saveFinishedMatch(richard, paul, paul);
+        saveFinishedMatch(paul, john, paul);
+        saveFinishedMatch(george, john, george);
+        saveFinishedMatch(richard, john, richard);
+        saveFinishedMatch(john, paul, paul);
+        saveFinishedMatch(george, richard, richard);
+        saveFinishedMatch(john, george, george);
+        saveFinishedMatch(john, richard, richard);
+        saveFinishedMatch(george, paul, paul);
+        saveFinishedMatch(john, richard, john);
+        saveFinishedMatch(richard, paul, paul);
+        saveFinishedMatch(paul, john, paul);
+        saveFinishedMatch(george, john, george);
+        saveFinishedMatch(richard, john, richard);
+        saveFinishedMatch(richard, john, richard);
     }
 
     private Player getPlayer(String name){

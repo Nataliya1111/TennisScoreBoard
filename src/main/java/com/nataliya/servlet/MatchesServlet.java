@@ -29,24 +29,27 @@ public class MatchesServlet extends HttpServlet {
         int pageNumber = ValidationUtil.getValidPageNumber(req.getParameter("page"));
 
         List<Match> matches;
-        int pagesQuantity;
+        int lastPageNumber;
         String notFoundMessage = null;
 
         if (name == null || name.isBlank()){
             matches = matchPaginationService.getOneMatchesPage(pageNumber);
-            pagesQuantity = matchPaginationService.getLastPageNumber();
+            lastPageNumber = matchPaginationService.getLastPageNumber();
             if (matches.isEmpty()){
                 notFoundMessage =  "No matches found";
             }
         } else{
             matches = matchPaginationService.getOneMatchesPageByName(name, pageNumber);
-            pagesQuantity = matchPaginationService.getLastPageNumberByName(name);
+            lastPageNumber = matchPaginationService.getLastPageNumberByName(name);
             if (matches.isEmpty()){
                 notFoundMessage = String.format("Matches with player %s not found", name);
             }
         }
 
-        MatchesResponseDto matchesResponseDto = new MatchesResponseDto(matches, pagesQuantity, notFoundMessage);
+        List<Integer> pagesToShow = matchPaginationService.getPagesToShow(lastPageNumber, pageNumber);
+
+        MatchesResponseDto matchesResponseDto = new MatchesResponseDto(matches, notFoundMessage,
+                pagesToShow, pageNumber, lastPageNumber);
 
         req.setAttribute("matches_response_dto", matchesResponseDto);
         req.getRequestDispatcher(JspUtil.getPath(MATCHES_JSP_NAME)).forward(req, resp);

@@ -11,7 +11,9 @@ import java.util.List;
 public class MatchesResponseDto {
 
     private List<Match> matches;
-    private int pagesQuantity;
     private String notFoundMessage;
+    private List<Integer> pagesToShow;
+    private int currentPage;
+    private int lastPage;
 
 }
