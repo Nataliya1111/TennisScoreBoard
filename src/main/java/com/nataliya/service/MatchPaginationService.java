@@ -1,8 +1,8 @@
 package com.nataliya.service;
 
 import com.nataliya.dao.MatchDao;
-import com.nataliya.infrastructure.SessionFactoryProvider;
-import com.nataliya.infrastructure.TransactionManager;
+import com.nataliya.hibernate.SessionFactoryProvider;
+import com.nataliya.hibernate.TransactionManager;
 import com.nataliya.model.entity.Match;
 import org.hibernate.SessionFactory;
 

@@ -1,6 +1,8 @@
-package com.nataliya.infrastructure;
+package com.nataliya.listener;
 
 import com.nataliya.dao.PlayerDao;
+import com.nataliya.hibernate.SessionFactoryProvider;
+import com.nataliya.hibernate.TransactionManager;
 import com.nataliya.model.entity.Match;
 import com.nataliya.model.entity.Player;
 import com.nataliya.service.PersistentMatchService;
@@ -8,6 +10,9 @@ import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
 import org.hibernate.SessionFactory;
+
+import java.util.List;
+import java.util.Random;
 
 @WebListener
 public class TablesDataInitializer implements ServletContextListener {
@@ -23,42 +28,24 @@ public class TablesDataInitializer implements ServletContextListener {
         Player paul = getPlayer("Paul");
         Player george = getPlayer("George");
         Player richard = getPlayer("Richard");
+        List<Player> players = List.of(john, paul, george, richard);
 
-        saveFinishedMatch(john, paul, paul);
-        saveFinishedMatch(george, richard, richard);
-        saveFinishedMatch(john, george, george);
-        saveFinishedMatch(john, richard, richard);
-        saveFinishedMatch(george, paul, paul);
-        saveFinishedMatch(john, richard, john);
-        saveFinishedMatch(richard, paul, paul);
-        saveFinishedMatch(paul, john, paul);
-        saveFinishedMatch(george, john, george);
-        saveFinishedMatch(richard, john, richard);
-        saveFinishedMatch(john, paul, paul);
-        saveFinishedMatch(george, richard, richard);
-        saveFinishedMatch(john, george, george);
-        saveFinishedMatch(john, richard, richard);
-        saveFinishedMatch(george, paul, paul);
-        saveFinishedMatch(john, richard, john);
-        saveFinishedMatch(richard, paul, paul);
-        saveFinishedMatch(paul, john, paul);
-        saveFinishedMatch(george, john, george);
-        saveFinishedMatch(richard, john, richard);
-        saveFinishedMatch(john, paul, paul);
-        saveFinishedMatch(george, richard, richard);
-        saveFinishedMatch(john, george, george);
-        saveFinishedMatch(john, richard, richard);
-        saveFinishedMatch(george, paul, paul);
-        saveFinishedMatch(john, richard, john);
-        saveFinishedMatch(richard, paul, paul);
-        saveFinishedMatch(paul, john, paul);
-        saveFinishedMatch(george, john, george);
-        saveFinishedMatch(richard, john, richard);
-        saveFinishedMatch(richard, john, richard);
+        Random random = new Random();
+        for (int i = 0; i < 35; i++) {
+            int randomPlayer1 = random.nextInt(players.size());
+            int randomPlayer2;
+            while (true){
+                randomPlayer2 = random.nextInt(players.size());
+                if (randomPlayer2 != randomPlayer1){
+                    break;
+                }
+            }
+            int randomWinner = random.nextInt(2) == 0 ? randomPlayer1 : randomPlayer2;
+            saveFinishedMatch(players.get(randomPlayer1), players.get(randomPlayer2), players.get(randomWinner));
+        }
     }
 
     private Player getPlayer(String name){
-
         TransactionManager transactionManager = new TransactionManager();
         return transactionManager.runInTransaction(()  -> {
             Player player = playerDao.findByName(name).orElseGet(() -> playerDao.save(new Player(name)));

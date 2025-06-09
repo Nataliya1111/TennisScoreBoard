@@ -1,4 +1,4 @@
-package com.nataliya.infrastructure;
+package com.nataliya.hibernate;
 
 import com.nataliya.exception.DatabaseException;
 import org.hibernate.HibernateException;
@@ -28,18 +28,4 @@ public class TransactionManager {
         }
     }
 
-    //    public <T> void execute1(Consumer<T> action, T t){
-//        try{
-//            session = sessionFactory.getCurrentSession();
-//            session.beginTransaction();
-//            action.accept(t);
-//            session.getTransaction().commit();
-//        }
-//        catch (HibernateException e){
-//            if(session != null &&session.getTransaction().isActive()) {
-//                session.getTransaction().rollback();
-//            }
-//            throw new DatabaseException("Execute operation error", e);
-//        }
-//    }
 }

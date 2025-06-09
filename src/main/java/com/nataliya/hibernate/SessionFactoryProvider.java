@@ -1,4 +1,4 @@
-package com.nataliya.infrastructure;
+package com.nataliya.hibernate;
 
 import com.nataliya.model.entity.Match;
 import com.nataliya.model.entity.Player;

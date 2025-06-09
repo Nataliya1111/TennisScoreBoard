@@ -1,5 +1,6 @@
-package com.nataliya.infrastructure;
+package com.nataliya.listener;
 
+import com.nataliya.hibernate.SessionFactoryProvider;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;

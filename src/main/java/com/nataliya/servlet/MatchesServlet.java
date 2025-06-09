@@ -3,7 +3,6 @@ package com.nataliya.servlet;
 import com.nataliya.dto.MatchesResponseDto;
 import com.nataliya.model.entity.Match;
 import com.nataliya.service.MatchPaginationService;
-import com.nataliya.service.PersistentMatchService;
 import com.nataliya.util.JspUtil;
 import com.nataliya.util.ValidationUtil;
 import jakarta.servlet.ServletException;
@@ -19,7 +18,6 @@ import java.util.List;
 public class MatchesServlet extends HttpServlet {
 
     private static final String MATCHES_JSP_NAME = "matches";
-    private final PersistentMatchService persistentMatchService = PersistentMatchService.getInstance();
     private final MatchPaginationService matchPaginationService = MatchPaginationService.getInstance();
 
     @Override
@@ -39,6 +37,7 @@ public class MatchesServlet extends HttpServlet {
                 notFoundMessage =  "No matches found";
             }
         } else{
+            name = name.trim();
             matches = matchPaginationService.getOneMatchesPageByName(name, pageNumber);
             lastPageNumber = matchPaginationService.getLastPageNumberByName(name);
             if (matches.isEmpty()){
