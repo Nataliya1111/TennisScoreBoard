@@ -6,7 +6,7 @@ A web application for managing tennis matches in real-time. Users can create new
 
 ## 🧩 Tech Stack
 
-- **Java 21**
+- **Java 20**
 - **Jakarta Servlets & JSP**
 - **Hibernate ORM (JPA)**
 - **H2 In-Memory Database**
