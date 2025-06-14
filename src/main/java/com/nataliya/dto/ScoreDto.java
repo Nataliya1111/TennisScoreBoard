@@ -8,8 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class ScoreDto { //MatchScoreDto
-
+public class ScoreDto {
     private PlayerScoreDto player1Score;
     private PlayerScoreDto player2Score;
     private MatchState matchState;

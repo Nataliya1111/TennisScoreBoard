@@ -26,15 +26,15 @@ public class MatchPaginationService {
     }
 
     public List<Match> getOneMatchesPage(int pageNumber){
-        return transactionManager.runInTransaction(() -> matchDao.getOnePageOfMatches(pageNumber, PAGE_SIZE));
+        return transactionManager.runInTransaction(() -> matchDao.getPageOfMatches(pageNumber, PAGE_SIZE));
     }
 
     public List<Match> getOneMatchesPageByName(String name, int pageNumber){
-        return transactionManager.runInTransaction(() -> matchDao.getOnePageOfMatchesByName(name, pageNumber, PAGE_SIZE));
+        return transactionManager.runInTransaction(() -> matchDao.getPageOfMatchesByName(name, pageNumber, PAGE_SIZE));
     }
 
     public int getLastPageNumber(){
-        int matchesQuantity = transactionManager.runInTransaction(() -> matchDao.getMatchesQuantity());
+        int matchesQuantity = transactionManager.runInTransaction(() -> matchDao.countMatches());
         return (int) Math.ceil((double) matchesQuantity / PAGE_SIZE);
     }
 
