@@ -1,56 +1,47 @@
 package com.nataliya.listener;
 
-import com.nataliya.dao.PlayerDao;
-import com.nataliya.hibernate.SessionFactoryProvider;
-import com.nataliya.hibernate.TransactionManager;
 import com.nataliya.model.entity.Match;
 import com.nataliya.model.entity.Player;
+import com.nataliya.service.OngoingMatchService;
 import com.nataliya.service.PersistentMatchService;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
-import org.hibernate.SessionFactory;
 
 import java.util.List;
 import java.util.Random;
+import java.util.stream.Stream;
 
 @WebListener
 public class TablesDataInitializer implements ServletContextListener {
 
-    private final SessionFactory sessionFactory = SessionFactoryProvider.getSessionFactory();
-    private final PlayerDao playerDao = new PlayerDao(sessionFactory);
+    private static final int INITIAL_MATCHES_QUANTITY = 35;
+
+    private final OngoingMatchService ongoingMatchService = OngoingMatchService.getInstance();
     private final PersistentMatchService persistentMatchService = PersistentMatchService.getInstance();
 
     @Override
     public void contextInitialized(ServletContextEvent sce) {
 
-        Player john = getPlayer("John");
-        Player paul = getPlayer("Paul");
-        Player george = getPlayer("George");
-        Player richard = getPlayer("Richard");
-        List<Player> players = List.of(john, paul, george, richard);
+        List<Player> players = Stream.of("John", "Paul", "George", "Richard")
+                .map(ongoingMatchService::getPlayer).toList();
+
+//        Player john = ongoingMatchService.getPlayer("John");
+//        Player paul = ongoingMatchService.getPlayer("Paul");
+//        Player george = ongoingMatchService.getPlayer("George");
+//        Player richard = ongoingMatchService.getPlayer("Richard");
+//        List<Player> players = List.of(john, paul, george, richard);
 
         Random random = new Random();
-        for (int i = 0; i < 35; i++) {
+        for (int i = 0; i < INITIAL_MATCHES_QUANTITY; i++) {
             int randomPlayer1 = random.nextInt(players.size());
-            int randomPlayer2;
-            while (true){
+            int randomPlayer2 = random.nextInt(players.size());
+            while (randomPlayer2 == randomPlayer1) {
                 randomPlayer2 = random.nextInt(players.size());
-                if (randomPlayer2 != randomPlayer1){
-                    break;
-                }
             }
-            int randomWinner = random.nextInt(2) == 0 ? randomPlayer1 : randomPlayer2;
+            int randomWinner = random.nextBoolean() ? randomPlayer1 : randomPlayer2;
             saveFinishedMatch(players.get(randomPlayer1), players.get(randomPlayer2), players.get(randomWinner));
         }
-    }
-
-    private Player getPlayer(String name){
-        TransactionManager transactionManager = new TransactionManager();
-        return transactionManager.runInTransaction(()  -> {
-            Player player = playerDao.findByName(name).orElseGet(() -> playerDao.save(new Player(name)));
-            return player;
-        });
     }
 
     private void saveFinishedMatch(Player player1, Player player2, Player winner) {

@@ -55,7 +55,7 @@ public class OngoingMatchService {
         log.info("Ongoing match with UUID {} has been deleted from ongoingMatches", uuid);
     }
 
-    private Player getPlayer(String name){
+    public Player getPlayer(String name){
         TransactionManager transactionManager = new TransactionManager();
         return transactionManager.runInTransaction(()  -> {
             Player player = playerDao.findByName(name).orElseGet(() -> playerDao.save(new Player(name)));
