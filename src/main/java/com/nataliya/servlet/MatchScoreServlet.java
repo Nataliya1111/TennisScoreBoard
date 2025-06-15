@@ -6,7 +6,6 @@ import com.nataliya.model.MatchState;
 import com.nataliya.model.OngoingMatch;
 import com.nataliya.model.Score;
 import com.nataliya.model.entity.Match;
-import com.nataliya.model.entity.Player;
 import com.nataliya.service.PersistentMatchService;
 import com.nataliya.service.OngoingMatchService;
 import com.nataliya.service.ScoreCountService;
@@ -49,19 +48,16 @@ public class MatchScoreServlet extends HttpServlet {
         resp.setContentType("application/json");
 
         UUID uuid = ValidationUtil.getValidUuid(req.getParameter("uuid"));
-        String pointWinningPlayer = req.getParameter("player");
-        ValidationUtil.validatePointWinnerString(pointWinningPlayer);
+        Long pointWinnerId = ValidationUtil.getValidPointWinnerId(req.getParameter("player_id"));
 
         OngoingMatch ongoingMatch = ongoingMatchService.getOngoingMatch(uuid);
-        Player pointWinner = pointWinningPlayer.equals("player1") ? ongoingMatch.getPlayer1() : ongoingMatch.getPlayer2();
-        Long pointWinnerId = pointWinner.getId();
 
         Score newScore = scoreCountService.updateScore(ongoingMatch, pointWinnerId);
         ScoreDto scoreDto = MappingUtil.convertToDto(newScore, ongoingMatch.getMatchState());
 
-        if (ongoingMatch.getMatchState() == MatchState.FINISHED){
+        if (ongoingMatch.getMatchState() == MatchState.FINISHED) {
             Match finishedMatch = Match.builder().player1(ongoingMatch.getPlayer1())
-                    .player2(ongoingMatch.getPlayer2()).winner(pointWinner).build();
+                    .player2(ongoingMatch.getPlayer2()).winner(ongoingMatch.getLastPointWinner()).build();
             persistentMatchService.saveFinishedMatch(finishedMatch);
             ongoingMatchService.deleteOngoingMatch(uuid);
         }

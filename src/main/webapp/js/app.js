@@ -9,7 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 //scoreUpdating
-function scorePoint(player) {
+function scorePoint(player_id) {
     const uuid = new URLSearchParams(window.location.search).get("uuid");
 
     fetch(`${contextPath}/match-score`, {
@@ -17,7 +17,7 @@ function scorePoint(player) {
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
         },
-        body: `uuid=${uuid}&player=${player}`
+        body: `uuid=${uuid}&player_id=${player_id}`
     })
         .then(response => response.json())
         .then(data => {

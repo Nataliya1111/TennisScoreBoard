@@ -62,7 +62,7 @@
                                 <div class="disabled-btn">Match is finished</div>
                             </c:when>
                             <c:otherwise>
-                                <div class="score-btn" onclick="scorePoint('player1')">Score</div>
+                                <div class="score-btn" onclick="scorePoint(${match.player1.id})">Score</div>
                             </c:otherwise>
                         </c:choose>
                     </td>
@@ -78,7 +78,7 @@
                                 <div class="disabled-btn">Match is finished</div>
                             </c:when>
                             <c:otherwise>
-                                <div class="score-btn" onclick="scorePoint('player2')">Score</div>
+                                <div class="score-btn" onclick="scorePoint(${match.player2.id})">Score</div>
                             </c:otherwise>
                         </c:choose>
                     </td>
