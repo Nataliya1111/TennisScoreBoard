@@ -1,5 +1,6 @@
 package com.nataliya.servlet;
 
+import com.nataliya.dto.MatchPageResult;
 import com.nataliya.dto.MatchesResponseDto;
 import com.nataliya.model.entity.Match;
 import com.nataliya.service.MatchPaginationService;
@@ -26,25 +27,24 @@ public class MatchesServlet extends HttpServlet {
         String name = req.getParameter("filter_by_player_name");
         int pageNumber = ValidationUtil.getValidPageNumber(req.getParameter("page"));
 
-        List<Match> matches;
-        int lastPageNumber;
+        MatchPageResult matchPageResult;
         String notFoundMessage = null;
 
-        if (name == null || name.isBlank()){
-            matches = matchPaginationService.getOneMatchesPage(pageNumber);
-            lastPageNumber = matchPaginationService.getLastPageNumber();
-            if (matches.isEmpty()){
-                notFoundMessage =  "No matches found";
+        if (name == null || name.isBlank()) {
+            matchPageResult = matchPaginationService.getMatchesPageAndLastPageNumber(pageNumber);
+            if (matchPageResult.matchesPage().isEmpty()) {
+                notFoundMessage = "No matches found";
             }
-        } else{
+        } else {
             name = name.trim();
-            matches = matchPaginationService.getOneMatchesPageByName(name, pageNumber);
-            lastPageNumber = matchPaginationService.getLastPageNumberByName(name);
-            if (matches.isEmpty()){
+            matchPageResult = matchPaginationService.getMatchesPageAndLastPageNumberByName(name, pageNumber);
+            if (matchPageResult.matchesPage().isEmpty()) {
                 notFoundMessage = String.format("Matches with player %s not found", name);
             }
         }
 
+        List<Match> matches = matchPageResult.matchesPage();
+        int lastPageNumber = matchPageResult.lastPageNumber();
         List<Integer> pagesToShow = matchPaginationService.getPagesToShow(lastPageNumber, pageNumber);
 
         MatchesResponseDto matchesResponseDto = new MatchesResponseDto(matches, notFoundMessage,

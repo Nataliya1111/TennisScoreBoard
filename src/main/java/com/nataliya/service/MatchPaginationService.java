@@ -1,6 +1,7 @@
 package com.nataliya.service;
 
 import com.nataliya.dao.MatchDao;
+import com.nataliya.dto.MatchPageResult;
 import com.nataliya.hibernate.SessionFactoryProvider;
 import com.nataliya.hibernate.TransactionManager;
 import com.nataliya.model.entity.Match;
@@ -18,32 +19,32 @@ public class MatchPaginationService {
     private final MatchDao matchDao = new MatchDao(sessionFactory);
     private final TransactionManager transactionManager = new TransactionManager();
 
-    private MatchPaginationService(){
+    private MatchPaginationService() {
     }
 
-    public static MatchPaginationService getInstance(){
+    public static MatchPaginationService getInstance() {
         return INSTANCE;
     }
 
-    public List<Match> getOneMatchesPage(int pageNumber){
-        return transactionManager.runInTransaction(() -> matchDao.getPageOfMatches(pageNumber, PAGE_SIZE));
+    public MatchPageResult getMatchesPageAndLastPageNumber(int pageNumber) {
+        return transactionManager.runInTransaction(() -> {
+            List<Match> matchesPage = matchDao.getPageOfMatches(pageNumber, PAGE_SIZE);
+            int matchesQuantity = matchDao.countMatches();
+            int lastPageNumber = (int) Math.ceil((double) matchesQuantity / PAGE_SIZE);
+            return new MatchPageResult(matchesPage, lastPageNumber);
+        });
     }
 
-    public List<Match> getOneMatchesPageByName(String name, int pageNumber){
-        return transactionManager.runInTransaction(() -> matchDao.getPageOfMatchesByName(name, pageNumber, PAGE_SIZE));
+    public MatchPageResult getMatchesPageAndLastPageNumberByName(String name, int pageNumber) {
+        return transactionManager.runInTransaction(() -> {
+            List<Match> matchesPage = matchDao.getPageOfMatchesByName(name, pageNumber, PAGE_SIZE);
+            int matchesQuantity = matchDao.countMatchesByName(name);
+            int lastPageNumber = (int) Math.ceil((double) matchesQuantity / PAGE_SIZE);
+            return new MatchPageResult(matchesPage, lastPageNumber);
+        });
     }
 
-    public int getLastPageNumber(){
-        int matchesQuantity = transactionManager.runInTransaction(() -> matchDao.countMatches());
-        return (int) Math.ceil((double) matchesQuantity / PAGE_SIZE);
-    }
-
-    public int getLastPageNumberByName(String name){
-        int matchesQuantity = transactionManager.runInTransaction(() -> matchDao.getMatchesByNameQuantity(name));
-        return (int) Math.ceil((double) matchesQuantity / PAGE_SIZE);
-    }
-
-    public List<Integer> getPagesToShow(int lastPage, int currentPage){
+    public List<Integer> getPagesToShow(int lastPage, int currentPage) {
         List<Integer> pagesToShow = new ArrayList<>();
 
         if (lastPage <= 5) {

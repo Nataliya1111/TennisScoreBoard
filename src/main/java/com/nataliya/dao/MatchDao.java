@@ -55,7 +55,7 @@ public class MatchDao extends Dao<Long, Match> {
         return (int) matchesQuantity;
     }
 
-    public int getMatchesByNameQuantity(String name) {
+    public int countMatchesByName(String name) {
         Session session = sessionFactory.getCurrentSession();
         Query countQuery = session.createQuery(GET_QUANTITY_BY_PLAYER_NAME, Long.class)
                 .setParameter("name", name.toLowerCase() + "%");
