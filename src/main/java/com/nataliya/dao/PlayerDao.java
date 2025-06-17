@@ -17,7 +17,7 @@ public class PlayerDao extends Dao<Long, Player> {
     }
 
     public Optional<Player> findByName(String name) {
-        Session session = sessionFactory.getCurrentSession();
+        Session session = sessionFactory.openSession();
         return session.createQuery(GET_BY_NAME_QUERY, Player.class)
                 .setParameter("name", name).uniqueResultOptional();
     }

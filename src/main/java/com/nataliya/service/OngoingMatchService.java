@@ -2,6 +2,7 @@ package com.nataliya.service;
 
 import com.nataliya.dao.PlayerDao;
 import com.nataliya.dto.NewMatchDto;
+import com.nataliya.exception.DatabaseException;
 import com.nataliya.exception.NotFoundException;
 import com.nataliya.hibernate.SessionFactoryProvider;
 import com.nataliya.hibernate.TransactionManager;
@@ -9,6 +10,7 @@ import com.nataliya.model.OngoingMatch;
 import com.nataliya.model.entity.Player;
 import lombok.extern.slf4j.Slf4j;
 import org.hibernate.SessionFactory;
+import org.hibernate.exception.ConstraintViolationException;
 
 import java.util.Map;
 import java.util.Optional;
@@ -24,14 +26,14 @@ public class OngoingMatchService {
     private final PlayerDao playerDao = new PlayerDao(sessionFactory);
     private final Map<UUID, OngoingMatch> ongoingMatches = new ConcurrentHashMap<>();
 
-    private OngoingMatchService(){
+    private OngoingMatchService() {
     }
 
-    public static OngoingMatchService getInstance(){
+    public static OngoingMatchService getInstance() {
         return INSTANCE;
     }
 
-    public OngoingMatch createOngoingMatch(NewMatchDto newMatchDto){
+    public OngoingMatch createOngoingMatch(NewMatchDto newMatchDto) {
 
         Player player1 = getPlayer(newMatchDto.getPlayer1Name());
         Player player2 = getPlayer(newMatchDto.getPlayer2Name());
@@ -43,23 +45,29 @@ public class OngoingMatchService {
         return ongoingMatch;
     }
 
-    public OngoingMatch getOngoingMatch(UUID uuid){
+    public OngoingMatch getOngoingMatch(UUID uuid) {
         return Optional.ofNullable(ongoingMatches.get(uuid))
                 .orElseThrow(() -> new NotFoundException(String.format("Match with UUID %s doesn't exist or is already finished", uuid)));
     }
 
-    public void deleteOngoingMatch(UUID uuid){
-        if(ongoingMatches.remove(uuid) == null){
+    public void deleteOngoingMatch(UUID uuid) {
+        if (ongoingMatches.remove(uuid) == null) {
             throw new NotFoundException(String.format("Match with UUID %s doesn't exist or is already finished", uuid));
         }
         log.info("Ongoing match with UUID {} has been deleted from ongoingMatches", uuid);
     }
 
-    public Player getPlayer(String name){
+    public Player getPlayer(String name) {
         TransactionManager transactionManager = new TransactionManager();
-        return transactionManager.runInTransaction(()  -> {
-            Player player = playerDao.findByName(name).orElseGet(() -> playerDao.save(new Player(name)));
-            return player;
-        });
+        try {
+            return transactionManager.runInTransaction(() -> playerDao.save(new Player(name)));
+        } catch (DatabaseException e) {
+            if (e.getCause() instanceof ConstraintViolationException) {
+                return playerDao.findByName(name).orElseThrow(() -> new NotFoundException(String.format("Player %s could not be saved or retrieved", name)));
+            } else {
+                throw e;
+            }
+        }
     }
+
 }
