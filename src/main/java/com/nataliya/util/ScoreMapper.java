@@ -10,18 +10,18 @@ import com.nataliya.model.Score;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 
-public class MappingUtil {
+public class ScoreMapper {
 
     private static final ModelMapper MODEL_MAPPER = new ModelMapper();
 
-    static{
+    static {
         TypeMap<PlayerScore, PlayerScoreDto> typeMap = MODEL_MAPPER.createTypeMap(PlayerScore.class, PlayerScoreDto.class);
         typeMap.setConverter(ctx -> {
             PlayerScore source = ctx.getSource();
             PlayerScoreDto playerScoreDto = new PlayerScoreDto();
             playerScoreDto.setSets(source.getSets());
             playerScoreDto.setGames(source.getGames());
-            if (isScoreNotValid(source)){
+            if (isScoreNotValid(source)) {
                 throw new InvalidStageStateException(String.format("Invalid PlayerScore: points - %s, tie break points - %d", source.getPoints().getLabel(), source.getTieBreakPoints()));
             }
             playerScoreDto.setPoints(source.getTieBreakPoints() > 0
@@ -31,17 +31,17 @@ public class MappingUtil {
 
     }
 
-    private MappingUtil(){
+    private ScoreMapper() {
     }
 
-    public static ScoreDto convertToDto(Score score, MatchState matchState){
+    public static ScoreDto convertToDto(Score score, MatchState matchState) {
         PlayerScoreDto player1Score = MODEL_MAPPER.map(score.getPlayer1Score(), PlayerScoreDto.class);
         PlayerScoreDto player2Score = MODEL_MAPPER.map(score.getPlayer2Score(), PlayerScoreDto.class);
         return new ScoreDto(player1Score, player2Score, matchState);
     }
 
-    private static boolean isScoreNotValid(PlayerScore score){
-        return  score.getPoints() == Points.GAME || (score.getPoints() != Points.LOVE && score.getTieBreakPoints() > 0);
+    private static boolean isScoreNotValid(PlayerScore score) {
+        return score.getPoints() == Points.GAME || (score.getPoints() != Points.LOVE && score.getTieBreakPoints() > 0);
     }
 
 

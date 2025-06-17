@@ -10,7 +10,7 @@ import com.nataliya.service.PersistentMatchService;
 import com.nataliya.service.OngoingMatchService;
 import com.nataliya.service.ScoreCountService;
 import com.nataliya.util.JspUtil;
-import com.nataliya.util.MappingUtil;
+import com.nataliya.util.ScoreMapper;
 import com.nataliya.util.ValidationUtil;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -53,7 +53,7 @@ public class MatchScoreServlet extends HttpServlet {
         OngoingMatch ongoingMatch = ongoingMatchService.getOngoingMatch(uuid);
 
         Score newScore = scoreCountService.updateScore(ongoingMatch, pointWinnerId);
-        ScoreDto scoreDto = MappingUtil.convertToDto(newScore, ongoingMatch.getMatchState());
+        ScoreDto scoreDto = ScoreMapper.convertToDto(newScore, ongoingMatch.getMatchState());
 
         if (ongoingMatch.getMatchState() == MatchState.FINISHED) {
             Match finishedMatch = Match.builder().player1(ongoingMatch.getPlayer1())

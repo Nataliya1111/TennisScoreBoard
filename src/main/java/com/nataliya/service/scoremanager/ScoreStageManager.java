@@ -4,9 +4,9 @@ import com.nataliya.model.OngoingMatch;
 import com.nataliya.model.PlayerScore;
 
 public abstract class ScoreStageManager {
-    PlayerScore pointWinnerScore;
-    PlayerScore pointLoserScore;
-    OngoingMatch ongoingMatch;
+    protected PlayerScore pointWinnerScore;
+    protected PlayerScore pointLoserScore;
+    protected OngoingMatch ongoingMatch;
 
     public ScoreStageManager(PlayerScore pointWinnerScore, PlayerScore pointLoserScore, OngoingMatch ongoingMatch) {
         this.pointWinnerScore = pointWinnerScore;

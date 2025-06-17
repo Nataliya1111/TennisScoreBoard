@@ -6,7 +6,9 @@ import com.nataliya.model.PlayerScore;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
-public class MatchStageManager extends ScoreStageManager{
+public class MatchStageManager extends ScoreStageManager {
+
+    private static final int SETS_FOR_MATCH_WIN = 2;
 
     public MatchStageManager(PlayerScore pointWinnerScore, PlayerScore pointLoserScore, OngoingMatch ongoingMatch) {
         super(pointWinnerScore, pointLoserScore, ongoingMatch);
@@ -14,7 +16,7 @@ public class MatchStageManager extends ScoreStageManager{
 
     @Override
     public boolean isStageComplete() {
-        return pointWinnerScore.getSets() == 2;
+        return pointWinnerScore.getSets() == SETS_FOR_MATCH_WIN;
     }
 
     @Override

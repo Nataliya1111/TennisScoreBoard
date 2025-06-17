@@ -14,10 +14,10 @@ public class PersistentMatchService {
     private final MatchDao matchDao = new MatchDao(sessionFactory);
     private final TransactionManager transactionManager = new TransactionManager();
 
-    private PersistentMatchService(){
+    private PersistentMatchService() {
     }
 
-    public static PersistentMatchService getInstance(){
+    public static PersistentMatchService getInstance() {
         return INSTANCE;
     }
 

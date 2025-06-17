@@ -22,7 +22,7 @@ public class Player {
     @Column(name = "Name", unique = true, nullable = false)
     private String name;
 
-    public Player(String name){
+    public Player(String name) {
         this.name = name;
     }
 }

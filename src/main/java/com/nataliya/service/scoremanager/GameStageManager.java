@@ -19,15 +19,16 @@ public class GameStageManager extends ScoreStageManager {
 
     @Override
     public boolean isStageComplete() {
-        return switch (ongoingMatch.getMatchState()){
+        return switch (ongoingMatch.getMatchState()) {
             case ONGOING -> pointWinnerScore.getPoints() == Points.GAME;
             case TIE_BREAK -> {
-                if(pointWinnerScore.getTieBreakPoints() < TIE_BREAK_WIN_POINTS){
+                if (pointWinnerScore.getTieBreakPoints() < TIE_BREAK_WIN_POINTS) {
                     yield false;
                 }
                 yield pointWinnerScore.getTieBreakPoints() - pointLoserScore.getTieBreakPoints() >= WIN_POINTS_DIFFERENCE;
             }
-            case FINISHED -> throw new InvalidStageStateException("Invalid operation: match is already in FINISHED state");
+            case FINISHED ->
+                    throw new InvalidStageStateException("Invalid operation: match is already in FINISHED state");
         };
     }
 
@@ -35,11 +36,11 @@ public class GameStageManager extends ScoreStageManager {
     public void handleStage() {
         pointWinnerScore.incrementGames();
 
-        switch (ongoingMatch.getMatchState()){
+        switch (ongoingMatch.getMatchState()) {
             case ONGOING -> {
                 pointWinnerScore.setPointsToZero();
                 pointLoserScore.setPointsToZero();
-                if (pointWinnerScore.getGames() == GAMES_FOR_TIE_BREAK && pointLoserScore.getGames() == GAMES_FOR_TIE_BREAK){
+                if (pointWinnerScore.getGames() == GAMES_FOR_TIE_BREAK && pointLoserScore.getGames() == GAMES_FOR_TIE_BREAK) {
                     ongoingMatch.setMatchState(MatchState.TIE_BREAK);
                 }
             }
@@ -48,7 +49,8 @@ public class GameStageManager extends ScoreStageManager {
                 pointLoserScore.setTieBreakPointsToZero();
                 ongoingMatch.setMatchState(MatchState.ONGOING);
             }
-            case FINISHED -> throw new InvalidStageStateException("Invalid operation: match is already in FINISHED state");
+            case FINISHED ->
+                    throw new InvalidStageStateException("Invalid operation: match is already in FINISHED state");
         }
     }
 }
